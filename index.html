@@ -3,70 +3,49 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DVHOST — محاسبه سریع /پریفیکس از تعداد IP</title>
+  <title>DVHOST — محاسبه سریع پریفیکس از تعداد IP</title>
   <!-- Vazir font -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vazir-font/29.0.1/font-face.css" integrity="sha512-ZHFuHiK3EA1uh2tx7nB0j9HyXR/IAFW24KVNFGjY8QIjtDKHmcowjUyObXF40wYrG25+kECHEbH8rL+HbvRwYA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
-    :root {
-      --dv-bg: #0b1221;
-      --dv-surface: #111827;
-      --dv-card: #0f172a;
-      --dv-primary: #06b6d4;
-      --dv-primary-2: #3b82f6;
-      --dv-accent: #10b981;
-      --dv-text: #e2e8f0;
-      --dv-muted: #94a3b8;
-      --radius: 16px;
+    :root{
+      --dv-bg:#0b1221;--dv-surface:#111827;--dv-card:#0f172a;--dv-primary:#06b6d4;--dv-primary-2:#3b82f6;--dv-accent:#10b981;--dv-text:#e2e8f0;--dv-muted:#94a3b8;--radius:16px;
     }
-    * { box-sizing: border-box; }
-	input[type=number]::-webkit-inner-spin-button,
-	input[type=number]::-webkit-outer-spin-button {
-	  -webkit-appearance: none;
-	  margin: 0;
-	}
-	input[type=number] {
-	  -moz-appearance: textfield;
-	}  
-    body { margin:0; background: var(--dv-bg); color: var(--dv-text); font-family: Vazir, Tahoma, Arial, sans-serif; min-height:100vh; display:grid; place-items:start center; padding:28px 14px; }
-    .container { width:100%; max-width:980px; }
-    .title { display:flex; align-items:center; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
-    .logo { width:40px; height:40px; border-radius:12px; background: conic-gradient(from 200deg, var(--dv-primary), var(--dv-primary-2)); box-shadow:0 10px 25px rgba(59,130,246,.25); }
-    h1 { margin:0; font-size:1.35rem; font-weight:800; }
-    .subtitle { color:var(--dv-muted); font-size:.94rem; margin-top:6px; }
-    .card { background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.0)); border:1px solid rgba(148,163,184,.2); border-radius:var(--radius); padding:18px; box-shadow:0 12px 40px rgba(0,0,0,.25); }
-    .grid { display:grid; gap:14px; }
-    @media (min-width:720px){ .grid-cols-2{ grid-template-columns:1fr 1fr; } }
-    label{ display:block; font-size:.9rem; color:var(--dv-muted); margin-bottom:8px; }
-    input,select{    font-family: 'Vazir'; width:100%; background:var(--dv-card); color:var(--dv-text); border:1px solid rgba(148,163,184,.25); border-radius:12px; padding:12px 14px; outline:none; }
-    .row{ display:flex;    justify-content: end; align-items:center; gap:12px; flex-wrap:wrap; }
-    .btn{     font-family: 'Vazir';cursor:pointer; border:none; border-radius:14px; padding:12px 16px; font-weight:700; background:linear-gradient(90deg, var(--dv-primary), var(--dv-primary-2)); color:#03111a; }
-    .btn.secondary{ background:var(--dv-card); color:var(--dv-text); border:1px solid rgba(148,163,184,.25); }
-    .switch{ display:inline-flex; align-items:center; gap:8px; user-select:none; }
-    .switch input{ width:auto; accent-color:var(--dv-primary); }
-    .result{ margin-top:14px; display:grid; gap:12px; grid-template-columns:1fr; }
-    @media (min-width:720px){ .result{ grid-template-columns: repeat(4,1fr); } }
-    .pill{ background:var(--dv-card); border:1px solid rgba(148,163,184,.2); border-radius:14px; padding:12px; text-align:center; }
-    .pill b{ display:block; font-size:1.05rem; }
-    .copy{ margin-top:10px; background:transparent; color:var(--dv-text); border:1px dashed rgba(148,163,184,.35); border-radius:10px; padding:8px 12px; cursor:pointer; }
-    details{ margin-top:10px; }
-    details summary{ cursor:pointer; padding:10px 12px; border:1px solid rgba(148,163,184,.25); border-radius:12px; background:var(--dv-surface); list-style:none; }
-    .table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:.95rem; }
-    .table th,.table td{ border-bottom:1px dashed rgba(148,163,184,.2); padding:10px 8px; text-align:center; }
-    .table th{ color:var(--dv-muted); }
-    footer{ margin-top:22px; color:var(--dv-muted); font-size:.9rem; text-align:center; line-height:1.9; }
-	.cp a{
-		color: #fff;
-		text-decoration: none;
-	}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--dv-bg);color:var(--dv-text);font-family:Vazir,Tahoma,Arial,sans-serif;min-height:100vh;display:grid;place-items:start center;padding:28px 14px}
+    .container{width:100%;max-width:980px}
+    .title{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+    .logo{width:40px;height:40px;border-radius:12px;background:conic-gradient(from 200deg,var(--dv-primary),var(--dv-primary-2));box-shadow:0 10px 25px rgba(59,130,246,.25)}
+    h1{margin:0;font-size:1.35rem;font-weight:800}
+    .subtitle{color:var(--dv-muted);font-size:.94rem;margin-top:6px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.0));border:1px solid rgba(148,163,184,.2);border-radius:var(--radius);padding:18px;box-shadow:0 12px 40px rgba(0,0,0,.25)}
+    .grid{display:grid;gap:14px}
+    @media (min-width:720px){.grid-cols-2{grid-template-columns:1fr 1fr}}
+    label{display:block;font-size:.9rem;color:var(--dv-muted);margin-bottom:8px}
+    input,select{font-family:'Vazir';width:100%;background:var(--dv-card);color:var(--dv-text);border:1px solid rgba(148,163,184,.25);border-radius:12px;padding:12px 14px;outline:none}
+    .row{display:flex;justify-content:end;align-items:center;gap:12px;flex-wrap:wrap}
+    .btn{font-family:'Vazir';cursor:pointer;border:none;border-radius:14px;padding:12px 16px;font-weight:700;background:linear-gradient(90deg,var(--dv-primary),var(--dv-primary-2));color:#03111a}
+    .btn.secondary{background:var(--dv-card);color:var(--dv-text);border:1px solid rgba(148,163,184,.25)}
+    .switch{display:inline-flex;align-items:center;gap:8px;user-select:none}
+    .switch input{width:auto;accent-color:var(--dv-primary)}
+    .result{margin-top:14px;display:grid;gap:12px;grid-template-columns:1fr}
+    @media (min-width:720px){.result{grid-template-columns:repeat(4,1fr)}}
+    .pill{background:var(--dv-card);border:1px solid rgba(148,163,184,.2);border-radius:14px;padding:12px;text-align:center}
+    .pill b{display:block;font-size:1.05rem}
+    .copy{font-family:'Vazir';margin-top:10px;background:transparent;color:var(--dv-text);border:1px dashed rgba(148,163,184,.35);border-radius:10px;padding:8px 12px;cursor:pointer}
+    details{margin-top:10px}
+    details summary{cursor:pointer;padding:10px 12px;border:1px solid rgba(148,163,184,.25);border-radius:12px;background:var(--dv-surface);list-style:none}
+    .table{width:100%;border-collapse:collapse;margin-top:10px;font-size:.95rem}
+    .table th,.table td{border-bottom:1px dashed rgba(148,163,184,.2);padding:10px 8px;text-align:center}
+    .table th{color:var(--dv-muted)}
+    footer{margin-top:22px;color:var(--dv-muted);font-size:.9rem;text-align:center;line-height:1.9}
+    .cp a{color:#fff;text-decoration:none}
   </style>
 </head>
 <body>
   <div class="container">
     <div class="title">
       <div class="logo" aria-hidden="true"></div>
-      <div>
-        <h1>محاسبه‌گر فوری پریفیکس</h1>
-      </div>
+      <div><h1>محاسبه‌گر فوری پریفیکس</h1></div>
     </div>
 
     <div class="card grid grid-cols-2" id="formCard">
@@ -91,12 +70,11 @@
       </div>
 
       <div class="row" style="margin-top: 28px;">
-        <!-- <label class="switch"><input id="singleHost" type="checkbox" /> آدرس تکی روی اینترفیس (برای 1 ⇒ /32)</label> -->
-        <!-- <label class="switch"><input id="allow31" type="checkbox" /> اجازه استفاده از /31 برای لینک‌های نقطه‌به‌نقطه</label> -->
+        <label class="switch"><input id="singleHost" type="checkbox" /> آدرس تکی روی اینترفیس (1 ⇒ /32)</label>
+        <label class="switch"><input id="allow31" type="checkbox" checked /> اجازه /31 برای لینک‌های نقطه‌به‌نقطه</label>
         <button id="calc" class="btn">محاسبه</button>
         <button id="reset" class="btn secondary">ریست</button>
       </div>
-
     </div>
 
     <div class="result" id="result" style="display:none;">
@@ -120,7 +98,7 @@
     </div>
 
     <footer>
-		<div class='cp'>نوشته شده توسط <a href="https://t.me/dvhost_cloud">DVHOST.CLOUD</a></div>
+      <div class='cp'>نوشته شده توسط <a href="https://t.me/dvhost_cloud">DVHOST.CLOUD</a></div>
     </footer>
   </div>
 
@@ -137,11 +115,14 @@
       if(prefix === 31){ usable = 2; }
       else if(prefix === 32){ usable = 1; }
       else { usable = total - 2; }
+
       if(mode === 'usable' && usable < desired){
-        hostBits += 1; prefix = 32 - hostBits; total = pow2(32 - prefix); usable = (prefix===31)?2:(prefix===32?1:total-2);
+        hostBits += 1; prefix = 32 - hostBits; total = pow2(32 - prefix);
+        usable = (prefix===31)?2:(prefix===32?1:total-2);
       }
       if(prefix === 31 && !allow31 && mode === 'usable' && desired > 2){
-        hostBits += 1; prefix = 32 - hostBits; total = pow2(32 - prefix); usable = (prefix===31)?2:(prefix===32?1:total-2);
+        hostBits += 1; prefix = 32 - hostBits; total = pow2(32 - prefix);
+        usable = (prefix===31)?2:(prefix===32?1:total-2);
       }
       return { prefix: prefix, total: total, usable: usable };
     }
@@ -153,7 +134,11 @@
       return { prefix: prefix, total: total, usable: total };
     }
 
-    function formatNumber(x){ var s = String(x); return s.replace(/\\B(?=(\\d{3})+(?!\\d))/g, ','); }
+    // fixed regex (thousand separators)
+    function formatNumber(x){
+      var s = String(x);
+      return s.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
 
     var versionEl = document.getElementById('version');
     var modeEl = document.getElementById('mode');
@@ -171,24 +156,50 @@
     var copyBtn = document.getElementById('copyBtn');
 
     function runCalc(){
-      var ver = versionEl.value; var mode = modeEl.value; var desired = Math.max(1, parseInt(countEl.value || '0', 10));
-        prefixOut.textContent = '/32'; totalOut.textContent = '1'; usableOut.textContent = '1'; summaryOut.textContent = 'IPv4 /32 → 1 address (host route)'; resultBox.style.display = 'grid'; return;
+      var ver = versionEl.value;
+      var mode = modeEl.value;
+      var desired = Math.max(1, parseInt(countEl.value || '0', 10));
+
+      if(ver === 'ipv4' && singleHostEl && singleHostEl.checked && desired === 1){
+        prefixOut.textContent = '/32';
+        totalOut.textContent = '1';
+        usableOut.textContent = '1';
+        summaryOut.textContent = 'IPv4 /32 → 1 address (host route)';
+        resultBox.style.display = 'grid';
+        return;
+      }
+
       var data;
       if(ver === 'ipv4'){
-        data = computeIPv4(desired, mode, allow31El.checked);
-        prefixOut.textContent = '/' + data.prefix; totalOut.textContent = formatNumber(data.total); usableOut.textContent = formatNumber(data.usable);
+        data = computeIPv4(desired, mode, !!(allow31El && allow31El.checked));
+        prefixOut.textContent = '/' + data.prefix;
+        totalOut.textContent = formatNumber(data.total);
+        usableOut.textContent = formatNumber(data.usable);
         summaryOut.textContent = 'IPv4 /' + data.prefix + ' → ' + formatNumber((mode==='usable')?data.usable:data.total) + ((mode==='usable')?' usable':' addresses');
       } else {
         data = computeIPv6(desired);
-        prefixOut.textContent = '/' + data.prefix; totalOut.textContent = formatNumber(data.total); usableOut.textContent = formatNumber(data.usable);
+        prefixOut.textContent = '/' + data.prefix;
+        totalOut.textContent = formatNumber(data.total);
+        usableOut.textContent = formatNumber(data.usable);
         summaryOut.textContent = 'IPv6 /' + data.prefix + ' → ' + formatNumber(data.usable) + ' addresses';
       }
       resultBox.style.display = 'grid';
     }
 
     calcBtn.addEventListener('click', runCalc);
-    resetBtn.addEventListener('click', function(){ countEl.value=''; resultBox.style.display='none'; });
-    copyBtn.addEventListener('click', function(){ var text = summaryOut.textContent + ' | Prefix ' + prefixOut.textContent; navigator.clipboard.writeText(text).then(function(){ copyBtn.textContent='کپی شد!'; setTimeout(function(){ copyBtn.textContent='کپی خروجی'; },1200); }).catch(function(){ copyBtn.textContent='کپی نشد'; setTimeout(function(){ copyBtn.textContent='کپی خروجی'; },1200); }); });
+    resetBtn.addEventListener('click', function(){
+      countEl.value=''; resultBox.style.display='none';
+    });
+    copyBtn.addEventListener('click', function(){
+      var text = summaryOut.textContent + ' | Prefix ' + prefixOut.textContent;
+      navigator.clipboard.writeText(text).then(function(){
+        copyBtn.textContent='کپی شد!';
+        setTimeout(function(){ copyBtn.textContent='کپی خروجی'; },1200);
+      }).catch(function(){
+        copyBtn.textContent='کپی نشد';
+        setTimeout(function(){ copyBtn.textContent='کپی خروجی'; },1200);
+      });
+    });
 
     var ref = [
       { p: 32, t: 1, u: 1, d: 'تک آدرس' },
@@ -202,11 +213,24 @@
       { p: 24, t: 256, u: 254, d: ' /24 → کلاسیک' }
     ];
     var refBody = document.getElementById('refBody');
-    ref.forEach(function(r){ var tr = document.createElement('tr'); tr.innerHTML = '<td>/' + r.p + '</td><td>' + formatNumber(r.t) + '</td><td>' + formatNumber(r.u) + '</td>'; refBody.appendChild(tr); });
+    ref.forEach(function(r){
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>/' + r.p + '</td><td>' + formatNumber(r.t) + '</td><td>' + formatNumber(r.u) + '</td>';
+      refBody.appendChild(tr);
+    });
 
-    function syncOptions(){ var isV4 = (versionEl.value === 'ipv4'); document.getElementById('allow31').closest('.switch').style.display = isV4 ? 'inline-flex' : 'none'; document.getElementById('singleHost').closest('.switch').style.display = isV4 ? 'inline-flex' : 'none'; }
+    function syncOptions(){
+      var isV4 = (versionEl.value === 'ipv4');
+      var allow31Wrap = allow31El && allow31El.closest('.switch');
+      var singleHostWrap = singleHostEl && singleHostEl.closest('.switch');
+      if(allow31Wrap) allow31Wrap.style.display = isV4 ? 'inline-flex' : 'none';
+      if(singleHostWrap) singleHostWrap.style.display = isV4 ? 'inline-flex' : 'none';
+    }
     versionEl.addEventListener('change', syncOptions);
     syncOptions();
+
+    // Enter key triggers calc
+    countEl.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ runCalc(); } });
   </script>
 </body>
 </html>
