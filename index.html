@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DVHOST — محاسبه سریع /پریفیکس از تعداد IP</title>
+  <!-- Vazir font -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vazir-font/29.0.1/font-face.css" integrity="sha512-ZHFuHiK3EA1uh2tx7nB0j9HyXR/IAFW24KVNFGjY8QIjtDKHmcowjUyObXF40wYrG25+kECHEbH8rL+HbvRwYA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    :root {
+      --dv-bg: #0b1221;
+      --dv-surface: #111827;
+      --dv-card: #0f172a;
+      --dv-primary: #06b6d4;
+      --dv-primary-2: #3b82f6;
+      --dv-accent: #10b981;
+      --dv-text: #e2e8f0;
+      --dv-muted: #94a3b8;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; background: var(--dv-bg); color: var(--dv-text); font-family: Vazir, Tahoma, Arial, sans-serif; min-height:100vh; display:grid; place-items:start center; padding:28px 14px; }
+    .container { width:100%; max-width:980px; }
+    .title { display:flex; align-items:center; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
+    .logo { width:40px; height:40px; border-radius:12px; background: conic-gradient(from 200deg, var(--dv-primary), var(--dv-primary-2)); box-shadow:0 10px 25px rgba(59,130,246,.25); }
+    h1 { margin:0; font-size:1.35rem; font-weight:800; }
+    .subtitle { color:var(--dv-muted); font-size:.94rem; margin-top:6px; }
+    .card { background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.0)); border:1px solid rgba(148,163,184,.2); border-radius:var(--radius); padding:18px; box-shadow:0 12px 40px rgba(0,0,0,.25); }
+    .grid { display:grid; gap:14px; }
+    @media (min-width:720px){ .grid-cols-2{ grid-template-columns:1fr 1fr; } }
+    label{ display:block; font-size:.9rem; color:var(--dv-muted); margin-bottom:8px; }
+    input,select{    font-family: 'Vazir'; width:100%; background:var(--dv-card); color:var(--dv-text); border:1px solid rgba(148,163,184,.25); border-radius:12px; padding:12px 14px; outline:none; }
+    .row{ display:flex;    justify-content: end; align-items:center; gap:12px; flex-wrap:wrap; }
+    .btn{     font-family: 'Vazir';cursor:pointer; border:none; border-radius:14px; padding:12px 16px; font-weight:700; background:linear-gradient(90deg, var(--dv-primary), var(--dv-primary-2)); color:#03111a; }
+    .btn.secondary{ background:var(--dv-card); color:var(--dv-text); border:1px solid rgba(148,163,184,.25); }
+    .switch{ display:inline-flex; align-items:center; gap:8px; user-select:none; }
+    .switch input{ width:auto; accent-color:var(--dv-primary); }
+    .result{ margin-top:14px; display:grid; gap:12px; grid-template-columns:1fr; }
+    @media (min-width:720px){ .result{ grid-template-columns: repeat(4,1fr); } }
+    .pill{ background:var(--dv-card); border:1px solid rgba(148,163,184,.2); border-radius:14px; padding:12px; text-align:center; }
+    .pill b{ display:block; font-size:1.05rem; }
+    .copy{ margin-top:10px; background:transparent; color:var(--dv-text); border:1px dashed rgba(148,163,184,.35); border-radius:10px; padding:8px 12px; cursor:pointer; }
+    details{ margin-top:10px; }
+    details summary{ cursor:pointer; padding:10px 12px; border:1px solid rgba(148,163,184,.25); border-radius:12px; background:var(--dv-surface); list-style:none; }
+    .table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:.95rem; }
+    .table th,.table td{ border-bottom:1px dashed rgba(148,163,184,.2); padding:10px 8px; text-align:center; }
+    .table th{ color:var(--dv-muted); }
+    footer{ margin-top:22px; color:var(--dv-muted); font-size:.9rem; text-align:center; line-height:1.9; }
+	.cp a{
+		color: #fff;
+		text-decoration: none;
+	}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>محاسبه‌گر فوری پریفیکس</h1>
+      </div>
+    </div>
+
+    <div class="card grid grid-cols-2" id="formCard">
+      <div>
+        <label for="version">نسخه IP</label>
+        <select id="version">
+          <option value="ipv4" selected>IPv4</option>
+          <option value="ipv6">IPv6</option>
+        </select>
+      </div>
+      <div>
+        <label for="mode">نوع تعداد</label>
+        <select id="mode">
+          <option value="usable">تعداد قابل‌استفاده (usable)</option>
+          <option value="total" selected>کل آدرس‌ها (total)</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="count">تعداد موردنیاز</label>
+        <input id="count" type="number" min="1" inputmode="numeric" placeholder="مثلاً 1 یا 50" />
+      </div>
+
+      <div class="row" style="margin-top: 28px;">
+        <!-- <label class="switch"><input id="singleHost" type="checkbox" /> آدرس تکی روی اینترفیس (برای 1 ⇒ /32)</label> -->
+        <!-- <label class="switch"><input id="allow31" type="checkbox" /> اجازه استفاده از /31 برای لینک‌های نقطه‌به‌نقطه</label> -->
+        <button id="calc" class="btn">محاسبه</button>
+        <button id="reset" class="btn secondary">ریست</button>
+      </div>
+
+    </div>
+
+    <div class="result" id="result" style="display:none;">
+      <div class="pill"><span>پریفیکس پیشنهادی</span><b id="prefixOut">/32</b></div>
+      <div class="pill"><span>کل آدرس‌ها</span><b id="totalOut">1</b></div>
+      <div class="pill"><span>قابل‌استفاده</span><b id="usableOut">1</b></div>
+      <div class="pill"><span>نتیجه کوتاه</span><b id="summaryOut">IPv4 /32 → 1 address</b></div>
+      <button class="copy" id="copyBtn" title="کپی نتیجه">کپی خروجی</button>
+    </div>
+
+    <div class="card" style="margin-top: 18px;">
+      <details>
+        <summary>نمایش جدول مرجع سریع IPv4 (پیش‌فرض مخفی)</summary>
+        <table class="table">
+          <thead>
+            <tr><th>/Prefix</th><th>Total</th><th>Usable*</th><th>توضیح کوتاه</th></tr>
+          </thead>
+          <tbody id="refBody"></tbody>
+        </table>
+        <div class="note" style="margin-top:8px;">* /31 معمولاً 2 آدرس usable روی لینک P2P (RFC 3021). /32 یک آدرس واحد.</div>
+      </details>
+    </div>
+
+    <footer>
+		<div class='cp'>نوشته شده توسط <a href="https://t.me/dvhost_cloud">DVHOST.CLOUD</a></div>
+    </footer>
+  </div>
+
+  <script>
+    function ceilLog2(n){ if(n<=1) return 0; return Math.ceil(Math.log2(n)); }
+    function pow2(k){ return Math.pow(2,k); }
+
+    function computeIPv4(desired, mode, allow31){
+      var need = (mode === 'usable') ? desired + 2 : desired;
+      var hostBits = Math.max(0, ceilLog2(need));
+      var prefix = 32 - hostBits; if(prefix<0) prefix=0; if(prefix>32) prefix=32;
+      var total = pow2(32 - prefix);
+      var usable;
+      if(prefix === 31){ usable = 2; }
+      else if(prefix === 32){ usable = 1; }
+      else { usable = total - 2; }
+      if(mode === 'usable' && usable < desired){
+        hostBits += 1; prefix = 32 - hostBits; total = pow2(32 - prefix); usable = (prefix===31)?2:(prefix===32?1:total-2);
+      }
+      if(prefix === 31 && !allow31 && mode === 'usable' && desired > 2){
+        hostBits += 1; prefix = 32 - hostBits; total = pow2(32 - prefix); usable = (prefix===31)?2:(prefix===32?1:total-2);
+      }
+      return { prefix: prefix, total: total, usable: usable };
+    }
+
+    function computeIPv6(desired){
+      var hostBits = Math.max(0, ceilLog2(desired));
+      var prefix = 128 - hostBits; if(prefix<0) prefix=0; if(prefix>128) prefix=128;
+      var total = (BigInt(1) << BigInt(128 - prefix)).toString();
+      return { prefix: prefix, total: total, usable: total };
+    }
+
+    function formatNumber(x){ var s = String(x); return s.replace(/\\B(?=(\\d{3})+(?!\\d))/g, ','); }
+
+    var versionEl = document.getElementById('version');
+    var modeEl = document.getElementById('mode');
+    var countEl = document.getElementById('count');
+    var singleHostEl = document.getElementById('singleHost');
+    var allow31El = document.getElementById('allow31');
+    var calcBtn = document.getElementById('calc');
+    var resetBtn = document.getElementById('reset');
+
+    var resultBox = document.getElementById('result');
+    var prefixOut = document.getElementById('prefixOut');
+    var totalOut = document.getElementById('totalOut');
+    var usableOut = document.getElementById('usableOut');
+    var summaryOut = document.getElementById('summaryOut');
+    var copyBtn = document.getElementById('copyBtn');
+
+    function runCalc(){
+      var ver = versionEl.value; var mode = modeEl.value; var desired = Math.max(1, parseInt(countEl.value || '0', 10));
+      if(ver === 'ipv4' && singleHostEl.checked && desired === 1){
+        prefixOut.textContent = '/32'; totalOut.textContent = '1'; usableOut.textContent = '1'; summaryOut.textContent = 'IPv4 /32 → 1 address (host route)'; resultBox.style.display = 'grid'; return;
+      }
+      var data;
+      if(ver === 'ipv4'){
+        data = computeIPv4(desired, mode, allow31El.checked);
+        prefixOut.textContent = '/' + data.prefix; totalOut.textContent = formatNumber(data.total); usableOut.textContent = formatNumber(data.usable);
+        summaryOut.textContent = 'IPv4 /' + data.prefix + ' → ' + formatNumber((mode==='usable')?data.usable:data.total) + ((mode==='usable')?' usable':' addresses');
+      } else {
+        data = computeIPv6(desired);
+        prefixOut.textContent = '/' + data.prefix; totalOut.textContent = formatNumber(data.total); usableOut.textContent = formatNumber(data.usable);
+        summaryOut.textContent = 'IPv6 /' + data.prefix + ' → ' + formatNumber(data.usable) + ' addresses';
+      }
+      resultBox.style.display = 'grid';
+    }
+
+    calcBtn.addEventListener('click', runCalc);
+    resetBtn.addEventListener('click', function(){ countEl.value=''; resultBox.style.display='none'; });
+    copyBtn.addEventListener('click', function(){ var text = summaryOut.textContent + ' | Prefix ' + prefixOut.textContent; navigator.clipboard.writeText(text).then(function(){ copyBtn.textContent='کپی شد!'; setTimeout(function(){ copyBtn.textContent='کپی خروجی'; },1200); }).catch(function(){ copyBtn.textContent='کپی نشد'; setTimeout(function(){ copyBtn.textContent='کپی خروجی'; },1200); }); });
+
+    var ref = [
+      { p: 32, t: 1, u: 1, d: 'تک آدرس' },
+      { p: 31, t: 2, u: 2, d: 'P2P (RFC 3021)' },
+      { p: 30, t: 4, u: 2, d: ' /30 → دو هاست usable' },
+      { p: 29, t: 8, u: 6, d: ' /29 → شش هاست usable' },
+      { p: 28, t: 16, u: 14, d: ' /28 → چهارده هاست usable' },
+      { p: 27, t: 32, u: 30, d: ' /27 → سی هاست usable' },
+      { p: 26, t: 64, u: 62, d: ' /26 → شصت‌ودو هاست usable' },
+      { p: 25, t: 128, u: 126, d: ' /25 → ۱۲۶ هاست usable' },
+      { p: 24, t: 256, u: 254, d: ' /24 → کلاسیک' },
+      { p: 23, t: 512, u: 510, d: ' /23' },
+      { p: 22, t: 1024, u: 1022, d: ' /22' },
+      { p: 21, t: 2048, u: 2046, d: ' /21' }
+    ];
+    var refBody = document.getElementById('refBody');
+    ref.forEach(function(r){ var tr = document.createElement('tr'); tr.innerHTML = '<td>/' + r.p + '</td><td>' + formatNumber(r.t) + '</td><td>' + formatNumber(r.u) + '</td><td>' + r.d + '</td>'; refBody.appendChild(tr); });
+
+    function syncOptions(){ var isV4 = (versionEl.value === 'ipv4'); document.getElementById('allow31').closest('.switch').style.display = isV4 ? 'inline-flex' : 'none'; document.getElementById('singleHost').closest('.switch').style.display = isV4 ? 'inline-flex' : 'none'; }
+    versionEl.addEventListener('change', syncOptions);
+    syncOptions();
+  </script>
+</body>
+</html>
