@@ -101,14 +101,13 @@
 
     <div class="card" style="margin-top: 18px;">
       <details>
-        <summary>نمایش جدول مرجع سریع IPv4 (پیش‌فرض مخفی)</summary>
+        <summary style="text-align:center">نمایش جدول مرجع سریع</summary>
         <table class="table">
           <thead>
-            <tr><th>/Prefix</th><th>Total</th><th>Usable*</th><th>توضیح کوتاه</th></tr>
+            <tr><th>/Prefix</th><th>کل</th><th>قابل استفاده</th></tr>
           </thead>
           <tbody id="refBody"></tbody>
         </table>
-        <div class="note" style="margin-top:8px;">* /31 معمولاً 2 آدرس usable روی لینک P2P (RFC 3021). /32 یک آدرس واحد.</div>
       </details>
     </div>
 
@@ -194,13 +193,10 @@
       { p: 27, t: 32, u: 30, d: ' /27 → سی هاست usable' },
       { p: 26, t: 64, u: 62, d: ' /26 → شصت‌ودو هاست usable' },
       { p: 25, t: 128, u: 126, d: ' /25 → ۱۲۶ هاست usable' },
-      { p: 24, t: 256, u: 254, d: ' /24 → کلاسیک' },
-      { p: 23, t: 512, u: 510, d: ' /23' },
-      { p: 22, t: 1024, u: 1022, d: ' /22' },
-      { p: 21, t: 2048, u: 2046, d: ' /21' }
+      { p: 24, t: 256, u: 254, d: ' /24 → کلاسیک' }
     ];
     var refBody = document.getElementById('refBody');
-    ref.forEach(function(r){ var tr = document.createElement('tr'); tr.innerHTML = '<td>/' + r.p + '</td><td>' + formatNumber(r.t) + '</td><td>' + formatNumber(r.u) + '</td><td>' + r.d + '</td>'; refBody.appendChild(tr); });
+    ref.forEach(function(r){ var tr = document.createElement('tr'); tr.innerHTML = '<td>/' + r.p + '</td><td>' + formatNumber(r.t) + '</td><td>' + formatNumber(r.u) + '</td>'; refBody.appendChild(tr); });
 
     function syncOptions(){ var isV4 = (versionEl.value === 'ipv4'); document.getElementById('allow31').closest('.switch').style.display = isV4 ? 'inline-flex' : 'none'; document.getElementById('singleHost').closest('.switch').style.display = isV4 ? 'inline-flex' : 'none'; }
     versionEl.addEventListener('change', syncOptions);
