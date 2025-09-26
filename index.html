@@ -172,9 +172,7 @@
 
     function runCalc(){
       var ver = versionEl.value; var mode = modeEl.value; var desired = Math.max(1, parseInt(countEl.value || '0', 10));
-      if(ver === 'ipv4' && singleHostEl.checked && desired === 1){
         prefixOut.textContent = '/32'; totalOut.textContent = '1'; usableOut.textContent = '1'; summaryOut.textContent = 'IPv4 /32 → 1 address (host route)'; resultBox.style.display = 'grid'; return;
-      }
       var data;
       if(ver === 'ipv4'){
         data = computeIPv4(desired, mode, allow31El.checked);
